@@ -1,0 +1,39 @@
+<% title 'Users' %>
+<% if @users.blank? %>
+<h2>No Esisting users</h2>
+<% else %>
+<h2>Existing users</h2>
+<table>
+  <thead>
+    <tr>
+      <th width="15%">Name</th>
+      <th width="15%">Date Of Birth</th>
+      <th width="10%">Gender</th>
+      <th width="10%">Interested in</th>
+      <th width="15%">Email</th>
+      <th width="20%">Home Location</th>
+      <th width="10%">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+   <% @users.each do |c| %>
+    <tr>
+      <td><%=  c.first_name%>, <%= c.last_name %></td>
+      <td><%=  c.dob %></td>
+      <td><%=  c.gender %></td>
+      <td><%=  c.preference %></td>
+      <td><%=  c.email %></td>
+      <td><%=  c.home_latitude%>, <%= c.home_longitude %></td>
+      <td><%= link_to 'Interests', {:action => 'show', :id => c.id}, :class => 'small button' -%></td>
+    </tr>
+  <% end %>
+  </tbody>
+</table>
+<ul id = "users">
+
+   <li></li>
+
+</ul>
+
+<% end %>
+<p><%= link_to "Add new user", {:action => 'create' }%></p>

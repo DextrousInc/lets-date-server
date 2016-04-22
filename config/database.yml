@@ -14,18 +14,30 @@
 # Configure Using Gemfile
 # gem 'pg'
 #
-default: &default
+postgresql: &postgresql
   adapter: postgresql
+  database: <%=ENV['OPENSHIFT_APP_NAME']%>
+  username: <%=ENV['OPENSHIFT_POSTGRESQL_DB_USERNAME']%>
+  password: <%=ENV['OPENSHIFT_POSTGRESQL_DB_PASSWORD']%>
+  host:     <%=ENV['OPENSHIFT_POSTGRESQL_DB_HOST']%>
+  port:     <%=ENV['OPENSHIFT_POSTGRESQL_DB_PORT']%>
+  min_messages: ERROR
+  reconnect: false
+
+default: &default
   encoding: unicode
   # For details on connection pooling, see rails configuration guide
   # http://guides.rubyonrails.org/configuring.html#database-pooling
   pool: 5
+  <<: *postgresql
 
 development:
   <<: *default
   database: lets-date-server
   username: lets_date_db
   password: password1
+  host:     localhost
+  port:     5432
 
   # The specified database role being used to connect to postgres.
   # To create additional roles in postgres see `$ createuser --help`.
@@ -82,6 +94,3 @@ test:
 #
 production:
   <<: *default
-  database: lets-date-server
-  username: lets_date_db
-  password: <%= ENV['LETS-DATE-SERVER_DATABASE_PASSWORD'] %>

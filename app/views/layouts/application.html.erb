@@ -1,14 +1,73 @@
 <!DOCTYPE html>
-<html>
-<head>
-  <title>LetsDateServer</title>
-  <%= stylesheet_link_tag    'application', media: 'all', 'data-turbolinks-track' => true %>
-  <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
-  <%= csrf_meta_tags %>
-</head>
-<body>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<%= yield %>
+    <title><%= content_for?(:title) ? yield(:title) : "LetsDate" %></title>
 
-</body>
+    <%= stylesheet_link_tag    "application" %>
+    <%= javascript_include_tag "application", 'data-turbolinks-track' => true %>
+    <%= csrf_meta_tags %>
+  </head>
+
+  <body>
+    <div>
+        <div class="top-bar">
+          <div class="top-bar-left">
+            <ul class="dropdown menu" data-dropdown-menu>
+                <li class="menu-text">DextrousInc</li>
+                <li><a href="/">Home</a></li>
+                <li><a href="/users">Users</a></li>
+                <li><a href="/routes">Routes</a></li>
+                <% if session[:mysession] %>
+                <li><a href="/my-board">My Board</a></li>
+                <% end %>
+            </ul>
+          </div>
+          <div class="top-bar-right">
+            <ul class="dropdown menu" data-dropdown-menu>
+            <% if session[:mysession] %>
+                <li><a>Welcome {{ session[:mysession].fullName }}</a></li>
+            <% end %>
+                <li>
+                    <a href="#">Actions</a>
+                    <ul class="menu vertical">
+                        <% if session[:mysession] %>
+                            <li><a href="/my-profile">Profile</a></li>
+                            <li><a href="/logout">Logout</a></li>
+                        <% else %>
+                            <li><a href="/login">Sign in</a></li>
+                            <li><a href="/login">Sign up</a></li>
+                        <% end %>
+                    </ul>
+                </li>
+            </ul>
+          </div>
+        </div>
+    </div>
+    <div class="row main">
+        <div class="large-12 columns">
+          <%= yield %>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        <div class="row">
+            <div class="medium-4 medium-push-8 columns">
+                <ul class="home-social">
+                    <li><a href="http://www.twitter.com/M_Rajagopal" class="twitter"></a></li>
+                    <li><a href="http://www.facebook.com/rajagopa.atech" class="facebook"></a></li>
+                    <li><a href="mailto:rajagopal.a.dinesh.28@gmail.com" class="mail"></a></li>
+                </ul>
+            </div>
+            <div class="medium-8 medium-pull-4 columns">
+                <ul class="links">
+                    <li><a href="http://bookworms-dextrous.rhcloud.com/#/bookworm/about">About author</a></li>
+                </ul>
+                <p class="copyright">© 2016 Dextrous, Inc. All rights reserved.</p>
+            </div>
+        </div>
+    </div>
+
+  </body>
 </html>

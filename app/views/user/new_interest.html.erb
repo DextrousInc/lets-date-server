@@ -1,0 +1,24 @@
+<h1>Add new interest</h1>
+<div data-abide-error class="alert callout" style="display: none;">
+  <p><i class="fi-alert"></i> There are some errors in your form.</p>
+</div>
+<%= form_tag :action => 'create_interest', :html => {"data-abide" => '', 'novalidate' => ''} do %>
+<label for = "user_interest_category">Category
+  <span class="form-error">
+    Category is required.
+  </span>
+  <%= text_field 'user_interests', 'category', "placeholder"=>"Movie", "required"=>"true" %>
+</label>
+
+<label for = "user_interest_names">Interest
+  <span class="form-error">
+    Interest is required.
+  </span>
+  <%= text_field 'user_interests', 'names', "placeholder"=>"Animation", "required"=>"true"%>
+</label>
+<%= hidden_field 'user_interests', 'user_id' , :value => @user_id_value%></p>
+
+<%= submit_tag "Create", :class=> 'button' %>
+
+<% end -%>
+<%= link_to 'Back', {:action => 'list'} %>
