@@ -1,0 +1,23 @@
+<h1>Sign in</h1>
+<div data-abide-error class="alert callout" style="display: none;">
+  <p><i class="fi-alert"></i> There are some errors in your form.</p>
+</div>
+<%= form_tag :action => 'login', :html => {"data-abide" => '', 'novalidate' => ''} do %>
+<label for = "user_email">Sub Category
+  <span class="form-error">
+    Email is required.
+  </span>
+  <%= text_field 'users', 'email', "placeholder"=>"username@domain.com", "required"=>"true" %>
+</label>
+
+<label for = "user_password">Interest
+  <span class="form-error">
+    Password is required.
+  </span>
+  <%= password_field 'users', 'password', "placeholder"=>"Password", "required"=>"true"%>
+</label>
+
+<%= submit_tag "Submit", :class=> 'button' %>
+
+<% end -%>
+<%= link_to 'Back', {:action => 'home'} %>

@@ -3,19 +3,27 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
 
   # You can have the root of your site routed with "root"
-  root :to => 'user#home'
-  get 'users' => 'user#list'
-  get 'users/:id' => 'user#show'
-  post 'new/users' => 'user#create'
-  get 'new/users' => 'user#new'
-  post 'new/interest' => 'user#create_interest'
-  get 'new/interest' => 'user#new_interest'
+  root :to => 'users#home'
+  get 'users' => 'users#list'
+  get 'users/view/:id' => 'user_interests#show'
+
+  post 'users/new' => 'users#create'
+  get 'users/new' => 'users#new'
+
+  post 'users/login' => 'users#login'
+  get 'users/login' => 'users#view_login'
+
+  get 'users/logout' => 'users#logout'
+
+  post 'users/interests/new' => 'user_interests#create'
+  get 'users/interests/new' => 'user_interests#new'
+  get 'users/interests/impress' => 'user_interests#impress'
 
   #api
   #namespace :api do
     # resources :user, only: [:index, :create, :show, :update, :destroy]
-    get 'api/user/:id' => 'api/user#show'
-    get 'api/users' => 'api/user#list'
+    get 'api/user/:id' => 'api/users#show'
+    get 'api/users' => 'api/users#list'
     # resources :microposts, only: [:index, :create, :show, :update, :destroy]
   #end
 

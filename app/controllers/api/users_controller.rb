@@ -1,10 +1,10 @@
-class Api::UserController < Api::BaseController
+class Api::UsersController < Api::BaseController
   def show
-    user = User.find(params[:id])
+    user = Users.find(params[:id])
     render(json: Api::UserSerializer.new(user).to_json)
   end
   def list
-    users = User.all
+    users = Users.all
     users_json = []
     users.each { |user|
       users_json << Api::UserSerializer.new(user)

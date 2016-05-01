@@ -18,27 +18,27 @@
             <ul class="dropdown menu" data-dropdown-menu>
                 <li class="menu-text">DextrousInc</li>
                 <li><a href="/">Home</a></li>
-                <li><a href="/users">Users</a></li>
+                <li><%= link_to 'Users', {:action => 'list', :controller => 'users'} %></li>
                 <li><a href="/routes">Routes</a></li>
-                <% if session[:mysession] %>
+                <% if session[:current_user] %>
                 <li><a href="/my-board">My Board</a></li>
                 <% end %>
             </ul>
           </div>
           <div class="top-bar-right">
             <ul class="dropdown menu" data-dropdown-menu>
-            <% if session[:mysession] %>
-                <li><a>Welcome {{ session[:mysession].fullName }}</a></li>
+            <% if session[:current_user] %>
+                <li><a>Welcome <%= session[:display_name] %></a></li>
             <% end %>
                 <li>
                     <a href="#">Actions</a>
                     <ul class="menu vertical">
-                        <% if session[:mysession] %>
+                        <% if session[:current_user] %>
                             <li><a href="/my-profile">Profile</a></li>
-                            <li><a href="/logout">Logout</a></li>
+                            <li><%= link_to 'Logout', {:action => 'logout', :controller => 'users'} %></li>
                         <% else %>
-                            <li><a href="/login">Sign in</a></li>
-                            <li><a href="/login">Sign up</a></li>
+                            <li><%= link_to 'Sign in', {:action => 'login', :controller => 'users'} %></li>
+                            <li><%= link_to 'Sign up', {:action => 'new', :controller => 'users'} %></li>
                         <% end %>
                     </ul>
                 </li>
@@ -51,23 +51,22 @@
           <%= yield %>
         </div>
     </div>
-    <div class="footer-bottom">
-        <div class="row">
-            <div class="medium-4 medium-push-8 columns">
-                <ul class="home-social">
-                    <li><a href="http://www.twitter.com/M_Rajagopal" class="twitter"></a></li>
-                    <li><a href="http://www.facebook.com/rajagopa.atech" class="facebook"></a></li>
-                    <li><a href="mailto:rajagopal.a.dinesh.28@gmail.com" class="mail"></a></li>
-                </ul>
-            </div>
-            <div class="medium-8 medium-pull-4 columns">
-                <ul class="links">
-                    <li><a href="http://bookworms-dextrous.rhcloud.com/#/bookworm/about">About author</a></li>
-                </ul>
-                <p class="copyright">© 2016 Dextrous, Inc. All rights reserved.</p>
-            </div>
+    <footer>
+      <div class="row">
+        <div class="medium-6 columns">
+          <ul class="menu home-social">
+            <li><a href="http://www.twitter.com/M_Rajagopal" class="twitter"></a></li>
+            <li><a href="http://www.facebook.com/rajagopa.atech" class="facebook"></a></li>
+            <li><a href="mailto:rajagopal.a.dinesh.28@gmail.com" class="mail"></a></li>
+          </ul>
         </div>
-    </div>
-
+        <div class="medium-6 columns">
+            <ul class="menu float-right">
+              <li class="menu-text"><a href="http://bookworms-dextrous.rhcloud.com/#/bookworm/about">About author</a></li>
+              <li class="menu-text copyright">© 2016 Dextrous, Inc. All rights reserved.</li>
+            </ul>
+        </div>
+      </div>
+    </footer>
   </body>
 </html>

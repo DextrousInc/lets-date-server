@@ -1,0 +1,41 @@
+// Place all the styles related to the UserInterests controller here.
+// They will automatically be included in application.css.
+// You can use Sass (SCSS) here: http://sass-lang.com/
+
+.shady-container{
+  border-radius: 16px 16px;
+  border-color: #fff;
+  border-style: solid;
+  box-shadow: 2px 2px 10px #B1B1B1;
+  margin-top: 25px;
+  margin-right: 5px;
+  border-width: 7px;
+}
+#location-list{
+  height:500px;
+  overflow-y: scroll;
+  .location-item{
+    border-color: #8C91A7;
+    border-style: solid;
+    border-width: 3px;
+  }
+  .selected {
+      border-color: #157539;
+      border-width: 7px;
+  }
+}
+#map-container {
+   height: 400px;
+   max-width: 750px;
+ #map-canvas {
+   height: 384px;
+   width: 100%;
+   /* Bootstrap Css Map Fix*/
+   img {
+    max-width: none;
+    }/* Bootstrap Css Map Fix*/
+  label {
+    width: auto; display:inline;
+  }
+ }
+}

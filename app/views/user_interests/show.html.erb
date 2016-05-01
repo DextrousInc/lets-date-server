@@ -1,0 +1,32 @@
+<h1>User Interests</h1>
+<% if @interest_map.empty? %>
+  No Interests
+
+<% else %>
+<div class="row">
+  <% @interest_map.each do |key, interests| %>
+    <div class="small-2 medium-3 large-4 columns">
+      <div class="form-card-compact">
+        <div class="form-card-heading">
+          <h3><%= interests[:name] %></h3>
+        </div>
+        <div class="form-card-body">
+          <ul class="text-left gray-light">
+            <% interests[:value].each do |interest| %>
+             <li><%= interest %></li>
+            <% end %>
+          </ul>
+          <% if @user_id.to_f == session[:current_user_id].to_f %>
+            <%= link_to "Add", {:action => 'create', :id => @user_id, :category => key}, :class=>'button expanded success' %>
+          <% elsif !interests[:value].empty? %>
+            <%= link_to "Impress", {:action => 'impress', :id => @user_id, :category => key}, :class=>'button expanded success' %>
+          <% else %>
+            <span class="label"> No information<span>
+          <% end %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+</div>
+<% end%>
+<%= link_to 'Back', {:action => 'list', :controller => 'users'} %>

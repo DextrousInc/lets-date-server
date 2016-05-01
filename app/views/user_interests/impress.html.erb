@@ -1,0 +1,128 @@
+<% title("Impress") %>
+<h1><%= @interest_category.place %> of <%=@chosen_user.first_name + ' ' + @chosen_user.last_name%>'s interest around you both </h1>
+<div class="row">
+  <div id="map-container" class="shady-container medium-4 large-8 columns">
+    <div id="map-canvas"></div>
+  </div>
+  <div class="shady-container medium-8 large-4 columns">
+    <div id="location-list"></div>
+  </div>
+</div>
+
+<script>
+ var map;
+ var centre = {lat: <%= @centre[:latitude] %>, lng: <%= @centre[:longitude] %>};
+ var myLocation = {lat: <%= @logged_user.home_latitude %>, lng: <%=@logged_user.home_longitude %>};
+ var partnerLocation = {lat: <%= @chosen_user.home_latitude %>, lng: <%=@chosen_user.home_longitude %>};
+ var partnerName = '<%= @chosen_user.first_name %> <%= @chosen_user.last_name %>';
+ var zoom = <%= @centre[:zoom] %>;
+ var radius = '<%= @centre[:radius] %>';
+ var typeOfPlace = '<%= @interest_category.place %>';
+ var keyword =  [];
+ <% @interested_sub_categories.each do |sub_category|  %>
+  if(keyword.indexOf('<%=sub_category.sub_category%>'.toLowerCase()) == -1) {
+    keyword.push('<%=sub_category.sub_category%>'.toLowerCase());
+  }
+ <% end %>
+
+ function initMap() {
+   // Specify location, radius and place types for your Places API search.
+   var theCentre = new google.maps.LatLng(centre.lat, centre.lng);
+   var placesRequest = {
+     location: theCentre,
+     radius: radius,
+     types: [typeOfPlace.toLowerCase()],
+     keyword : keyword.join('|')
+   };
+   map = new google.maps.Map(document.getElementById('map-canvas'), {
+    center: theCentre,
+    zoom: zoom
+  });
+  // Pass the directions request to the DistanceMatrixService.
+  var distanceMatrixService = new google.maps.DistanceMatrixService();
+  // create default view options
+  var sources = [myLocation, partnerLocation];
+  var directionMatricRequest = {
+    origins: sources,
+    destinations: [],
+    travelMode: google.maps.TravelMode.DRIVING
+  };
+  // create a infoWindow to display details
+  var infowindow = new google.maps.InfoWindow();
+  // Create the PlaceService and send the request.
+ // Handle the callback with an anonymous function.
+ var placesService = new google.maps.places.PlacesService(map);
+ placesService.nearbySearch(placesRequest, function(results, status) {
+    if (status == google.maps.places.PlacesServiceStatus.OK) {
+      var listHtmlString = '';
+      for (var i = 0; i < results.length; i++) {
+        var place = results[i];
+        // add these places to the existing location-list dom
+        listHtmlString += getDomForItem(place);
+        console.log(place);
+        // If the request succeeds, draw the place location on
+        // the map as a marker, and register an event to handle a
+        // click on the marker.
+        var marker = new google.maps.Marker({
+          map: map,
+          position: place.geometry.location
+        });
+        // add event listener to marker click to display details
+        google.maps.event.addListener(marker, 'click', function(iWindow, cPlace) {
+          // add event listener to marker click to display details
+          return function() {
+              var self = this;// to use this reference in iWindow
+              var placeLocation = {lat : cPlace.geometry.location.lat(), lng: cPlace.geometry.location.lng()};
+              directionMatricRequest.destinations = [placeLocation];
+              console.log(placeLocation);
+              distanceMatrixService.getDistanceMatrix(directionMatricRequest,
+                function(response, status) {
+                  if (status == google.maps.DistanceMatrixStatus.OK) {
+                    var origins = response.originAddresses;
+                    var destinations = response.destinationAddresses;
+                    var results = response.rows;
+                    console.log(results);
+                    // results[0].elements[0] will be the ditance between myLocation to the placeLocation
+                    // results[1].elements[0] will be the distance between partnerLocation to the placeLocation
+                    var content = '<div><strong>'
+                    + cPlace.name
+                    + '</strong><br>'
+                    + 'Place ID: '
+                    + cPlace.place_id
+                    + '<br>'
+                    + cPlace.vicinity;
+                    if(results[0].elements[0].distance &&
+                        results[1].elements[0].distance) {
+                        content += '<br/>#'
+                        +results[0].elements[0].distance.text
+                        +  'Away from you'
+                        + '<br/>#'
+                        + results[1].elements[0].distance.text
+                        + 'Away from '
+                        + partnerName;
+                    }
+                    content += '</div>';
+                    iWindow.setContent(content);
+                    iWindow.open(map, self);
+                  }// if check end
+                }// function call back end
+              );
+          };
+        }(infowindow, place)); // end of call back listener
+        $('#location-list').html(listHtmlString);
+      }// end for loop
+    }// end status check
+  });// end of place service call
+ }
+ function getDomForItem(cPlace) {
+   return '<div class="location-item"><strong>'
+   + cPlace.name
+   + '</strong><br>'
+   + 'Place ID: '
+   + cPlace.place_id
+   + '<br>'
+   + cPlace.vicinity
+   + '</div>';
+ }
+</script>
+<script src="https://maps.googleapis.com/maps/api/js?key=<%=@api_key%>&libraries=places&callback=initMap" async defer></script>

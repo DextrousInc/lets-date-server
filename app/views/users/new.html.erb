@@ -13,14 +13,21 @@
 <label for = "user_password">Password:
 <%= password_field 'users', 'password' %></label>
 
+<label for = "user_password">Confirm Password:
+<%= password_field 'users', 'password_confirmation' %></label>
+
 <label for = "user_dob">DOB:
 <%= date_field 'users', 'dob'%></label>
 
 <label for = "user_gender">Gender:
-<%= text_field 'users', 'gender'%></label>
+  <%= radio_button 'users', 'gender', 'male' %> Male
+  <%= radio_button 'users', 'gender', 'female' %> Female
+</label>
 <!--collection_select(:users, :subject_id, @subjects, :id, :name, prompt: true) -->
 <label for = "user_preference">Preference:
-<%= text_field 'users', 'preference'%></label>
+  <%= radio_button 'users', 'preference', 'male' %> Male
+  <%= radio_button 'users', 'preference', 'female' %> Female
+</label>
 
 <label for = "user_home_latititude">Latitude
 <%= number_field 'users', 'home_latitude', :step => 0.00000001%></label>
