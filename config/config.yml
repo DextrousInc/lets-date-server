@@ -1,6 +1,6 @@
 defaults: &defaults
   GOOGLE_MAPS_API_KEY: 'AIzaSyBoGA2VufIq_scXFZmqotG2l5vpQKXPTdU'
-  MIN_RADIUS: 5 # <= kilometeres
+  MIN_RADIUS: 20 # <= kilometeres
 
 development:
   <<: *defaults

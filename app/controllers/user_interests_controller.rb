@@ -43,8 +43,8 @@ class UserInterestsController < ApplicationController
 
       # set it to a model to render in the script tag
       @centre = {
-        :latitude => -33.8665,
-        :longitude => 151.1956,
+        :latitude => centre_location[0], #-33.8665,
+        :longitude => centre_location[1], #151.1956,
         :radius => radius, # => meteres
         :zoom => zoom # closer they both are greater is the zoom level
       }

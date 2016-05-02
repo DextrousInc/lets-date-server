@@ -14,14 +14,8 @@
 #location-list{
   height:500px;
   overflow-y: scroll;
-  .location-item{
-    border-color: #8C91A7;
-    border-style: solid;
-    border-width: 3px;
-  }
-  .selected {
+  .location-item.selected {
       border-color: #157539;
-      border-width: 7px;
   }
 }
 #map-container {

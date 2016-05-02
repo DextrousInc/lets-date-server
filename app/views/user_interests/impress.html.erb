@@ -5,7 +5,7 @@
     <div id="map-canvas"></div>
   </div>
   <div class="shady-container medium-8 large-4 columns">
-    <div id="location-list"></div>
+    <ul id="location-list" class="menu vertical"></ul>
   </div>
 </div>
 
@@ -30,18 +30,18 @@
    var theCentre = new google.maps.LatLng(centre.lat, centre.lng);
    var placesRequest = {
      location: theCentre,
-     radius: radius,
-     types: [typeOfPlace.toLowerCase()],
+     radius: radius*100,// TODO handle the metric conversion between meteres and kilometeres
+     types: ['restaurant'],
      keyword : keyword.join('|')
    };
-   map = new google.maps.Map(document.getElementById('map-canvas'), {
+   map = new google.maps.Map($('#map-canvas')[0], {
     center: theCentre,
     zoom: zoom
   });
   // Pass the directions request to the DistanceMatrixService.
   var distanceMatrixService = new google.maps.DistanceMatrixService();
   // create default view options
-  var sources = [myLocation, partnerLocation];
+  var sources = [myLocation, partnerLocation];//[{lat:-33.86789, lng:151.204054}, {lat : -33.858268,lng : 151.194454}];//
   var directionMatricRequest = {
     origins: sources,
     destinations: [],
@@ -60,6 +60,7 @@
         // add these places to the existing location-list dom
         listHtmlString += getDomForItem(place);
         console.log(place);
+        $('#location-list').html(listHtmlString);
         // If the request succeeds, draw the place location on
         // the map as a marker, and register an event to handle a
         // click on the marker.
@@ -75,54 +76,111 @@
               var placeLocation = {lat : cPlace.geometry.location.lat(), lng: cPlace.geometry.location.lng()};
               directionMatricRequest.destinations = [placeLocation];
               console.log(placeLocation);
-              distanceMatrixService.getDistanceMatrix(directionMatricRequest,
-                function(response, status) {
-                  if (status == google.maps.DistanceMatrixStatus.OK) {
-                    var origins = response.originAddresses;
-                    var destinations = response.destinationAddresses;
-                    var results = response.rows;
-                    console.log(results);
-                    // results[0].elements[0] will be the ditance between myLocation to the placeLocation
-                    // results[1].elements[0] will be the distance between partnerLocation to the placeLocation
-                    var content = '<div><strong>'
-                    + cPlace.name
-                    + '</strong><br>'
-                    + 'Place ID: '
-                    + cPlace.place_id
-                    + '<br>'
-                    + cPlace.vicinity;
-                    if(results[0].elements[0].distance &&
-                        results[1].elements[0].distance) {
-                        content += '<br/>#'
-                        +results[0].elements[0].distance.text
-                        +  'Away from you'
-                        + '<br/>#'
-                        + results[1].elements[0].distance.text
-                        + 'Away from '
-                        + partnerName;
-                    }
-                    content += '</div>';
-                    iWindow.setContent(content);
-                    iWindow.open(map, self);
-                  }// if check end
-                }// function call back end
-              );
+              // call distance matrix only if it is not already selected
+              var preComputedDistanceText = getPreComputedDistanceText(cPlace);
+              if(preComputedDistanceText) {
+                  content = getDomForIWindow(cPlace, null, partnerName, preComputedDistanceText);
+                  iWindow.setContent(content);
+                  iWindow.open(map, self);
+              } else {
+                  callDistanceMatrixToGetDistances(google, distanceMatrixService, directionMatricRequest,
+                                                    cPlace, infowindow, partnerName, self);
+              }
           };
         }(infowindow, place)); // end of call back listener
-        $('#location-list').html(listHtmlString);
       }// end for loop
     }// end status check
   });// end of place service call
- }
+}// end initMap
+ function getPreComputedDistanceText(cPlace) {
+   var placeChosenDom = $('.location-item #'+ cPlace.id + ' .distance-between-container');
+   if(placeChosenDom.length) {
+     // there is already a dom for this place id
+     return placeChosenDom.html();
+     // get the inner html and send it
+   }
+ }// end getPreComputedDistanceText
+ function highlightAndSetTheEquivalentPlaceItem(cPlace, results, partnerName) {
+   var selectedItemDom = $('.location-item #'+ cPlace.id);
+   if(selectedItemDom.length == 1 &&
+     results[0].elements[0].distance &&
+         results[1].elements[0].distance) {
+     if(!selectedItemDom.hasClass('selected')){
+       // add class only if it is not added
+      selectedItemDom.addClass('selected');
+      var newDom = $('<div class="distance-between-container">'
+      + '<br/>#'
+      + results[0].elements[0].distance.text
+      +  'Away from you'
+      + '<br/>#'
+      + results[1].elements[0].distance.text
+      + 'Away from '
+      + partnerName
+      + '</div>');
+      selectedItemDom.append(newDom);
+     }
+   }
+ } // end highlightAndSetTheEquivalentPlaceItem
+ function callDistanceMatrixToGetDistances(google,
+                                             distanceMatrixService, directionMatricRequest,
+                                             cPlace, iWindow, partnerName, referenceContext) {
+   distanceMatrixService.getDistanceMatrix(directionMatricRequest,
+     function(response, status) {
+       if (status == google.maps.DistanceMatrixStatus.OK) {
+         var origins = response.originAddresses;
+         var destinations = response.destinationAddresses;
+         var results = response.rows;
+         console.log(results);
+         // results[0].elements[0] will be the ditance between myLocation to the placeLocation
+         // results[1].elements[0] will be the distance between partnerLocation to the placeLocation
+         var content = getDomForIWindow(cPlace, results, partnerName, null);
+         iWindow.setContent(content);
+         iWindow.open(map, referenceContext);
+         // highlight and add the list item
+         highlightAndSetTheEquivalentPlaceItem(cPlace, results, partnerName);
+       }// if check end
+     }// function call back end
+   );
+ }// end callDistanceMatrixToGetDistances
+ function getDomForIWindow(cPlace, results, partnerName, preCreatedResult) {
+   var content = '<div><strong>'
+   + cPlace.name
+   + '</strong><br>'
+   + 'Place ID: '
+   + cPlace.place_id
+   + '<br>'
+   + cPlace.vicinity;
+
+   if(results &&
+      results[0].elements[0].distance &&
+       results[1].elements[0].distance) {
+       content += '<br/>#'
+       + results[0].elements[0].distance.text
+       +  'Away from you'
+       + '<br/>#'
+       + results[1].elements[0].distance.text
+       + 'Away from '
+       + partnerName;
+   } else if(preCreatedResult) {
+     content += preCreatedResult;
+   }
+   content += '</div>';
+   return content;
+ }// end getDomForIWindow
  function getDomForItem(cPlace) {
-   return '<div class="location-item"><strong>'
+   return '<li class="location-item">'
+   + '<div class="callout"'
+   + 'id=' + cPlace.id
+   + '>'
+   + '<strong>'
    + cPlace.name
    + '</strong><br>'
    + 'Place ID: '
    + cPlace.place_id
    + '<br>'
    + cPlace.vicinity
-   + '</div>';
- }
+   + '</div>'
+   + '</li>';
+ }// end getDomForItem
 </script>
 <script src="https://maps.googleapis.com/maps/api/js?key=<%=@api_key%>&libraries=places&callback=initMap" async defer></script>
