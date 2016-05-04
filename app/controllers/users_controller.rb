@@ -8,6 +8,13 @@ class UsersController < ApplicationController
    @user = User.new
   end
 
+  def date_list
+    if session[:current_user_id]
+      current_user = User.find_by(id: session[:current_user_id])
+      @users = User.where(gender: current_user.preference, preference: current_user.gender).where.not(id:session[:current_user_id])
+    end
+  end
+
   def view_login
     @user = User.new
   end

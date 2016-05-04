@@ -36,7 +36,6 @@ class UserInterestsController < ApplicationController
       if distance_between_them < APP_CONFIG['MIN_RADIUS']
         distance_between_them = APP_CONFIG['MIN_RADIUS']
       end
-      radius = distance_between_them / 2
       # define zoom based on distance
       zoom = 15
       @api_key = APP_CONFIG['GOOGLE_MAPS_API_KEY'] # fetch from config file
@@ -45,7 +44,7 @@ class UserInterestsController < ApplicationController
       @centre = {
         :latitude => centre_location[0], #-33.8665,
         :longitude => centre_location[1], #151.1956,
-        :radius => radius, # => meteres
+        :radius => distance_between_them , # => meteres
         :zoom => zoom # closer they both are greater is the zoom level
       }
     end

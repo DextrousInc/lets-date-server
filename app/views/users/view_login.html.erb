@@ -3,14 +3,14 @@
   <p><i class="fi-alert"></i> There are some errors in your form.</p>
 </div>
 <%= form_tag :action => 'login', :html => {"data-abide" => '', 'novalidate' => ''} do %>
-<label for = "user_email">Sub Category
+<label for = "user_email">Email
   <span class="form-error">
     Email is required.
   </span>
   <%= text_field 'users', 'email', "placeholder"=>"username@domain.com", "required"=>"true" %>
 </label>
 
-<label for = "user_password">Interest
+<label for = "user_password">Password
   <span class="form-error">
     Password is required.
   </span>

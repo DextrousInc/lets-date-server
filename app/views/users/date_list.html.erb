@@ -20,6 +20,11 @@
                <p><i>preference</i><%=  c.preference %></p>
               <p><i>Location</i><%=  c.home_latitude%>, <%= c.home_longitude %></p>
             </div>
+            <div class="row collapse">
+               <ul class="button-group columns">
+                  <li><%= link_to ('View <span>Interests </span>').html_safe, {:action => 'show', :controller => 'user_interests', :id => c.id}, :class => 'expanded button' -%></li>
+               </ul>
+            </div>
          </div>
       </div>
    </div>

@@ -19,9 +19,8 @@
                 <li class="menu-text">DextrousInc</li>
                 <li><a href="/">Home</a></li>
                 <li><%= link_to 'Users', {:action => 'list', :controller => 'users'} %></li>
-                <li><a href="/routes">Routes</a></li>
-                <% if session[:current_user] %>
-                <li><a href="/my-board">My Board</a></li>
+                <% if session[:current_user_id] %>
+                <li><%= link_to 'Date', {:action => 'date_list', :controller => 'users'} %></li>
                 <% end %>
             </ul>
           </div>

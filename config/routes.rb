@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   # You can have the root of your site routed with "root"
   root :to => 'users#home'
   get 'users' => 'users#list'
-  get 'users/view/:id' => 'user_interests#show'
+  get 'users/date' => 'users#date_list'
 
   post 'users/new' => 'users#create'
   get 'users/new' => 'users#new'
@@ -15,15 +15,20 @@ Rails.application.routes.draw do
 
   get 'users/logout' => 'users#logout'
 
+  get 'users/view/:id' => 'user_interests#show'
+
   post 'users/interests/new' => 'user_interests#create'
   get 'users/interests/new' => 'user_interests#new'
+
   get 'users/interests/impress' => 'user_interests#impress'
 
   #api
   #namespace :api do
     # resources :user, only: [:index, :create, :show, :update, :destroy]
     get 'api/user/:id' => 'api/users#show'
-    get 'api/users' => 'api/users#list'
+    get 'api/users/all' => 'api/users#list'
+
+    get 'api/users/interests/all/:id' => 'api/user_interests#list'
     # resources :microposts, only: [:index, :create, :show, :update, :destroy]
   #end
 
