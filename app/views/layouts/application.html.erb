@@ -22,6 +22,7 @@
                 <% if session[:current_user_id] %>
                 <li><%= link_to 'Date', {:action => 'date_list', :controller => 'users'} %></li>
                 <% end %>
+                <li><%= link_to 'App', {:action => 'about_app', :controller => 'users'} %></li>
             </ul>
           </div>
           <div class="top-bar-right">

@@ -4,6 +4,8 @@ Rails.application.routes.draw do
 
   # You can have the root of your site routed with "root"
   root :to => 'users#home'
+  get 'about/app' => 'users#about_app'
+
   get 'users' => 'users#list'
   get 'users/date' => 'users#date_list'
 
