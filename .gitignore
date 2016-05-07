@@ -7,7 +7,6 @@
 # Ignore bundler config.
 /.bundle
 *.lock
-*/*.lock
 # Ignore all logfiles and tempfiles.
 /log/*
 !/log/.keep
