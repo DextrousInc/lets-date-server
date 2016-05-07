@@ -25,10 +25,16 @@ Rails.application.routes.draw do
   #api
   #namespace :api do
     # resources :user, only: [:index, :create, :show, :update, :destroy]
-    get 'api/user/:id' => 'api/users#show'
+    get 'api/users/view/:id' => 'api/users#show'
     get 'api/users/all' => 'api/users#list'
 
+    get 'api/dates/all/:id' => 'api/users#date_list'
+
+    post 'api/users/login' => 'api/users#login'
+
     get 'api/users/interests/all/:id' => 'api/user_interests#list'
+    get 'api/users/interests/impress/:id/:category' => 'api/user_interests#impress'
+
     # resources :microposts, only: [:index, :create, :show, :update, :destroy]
   #end
 

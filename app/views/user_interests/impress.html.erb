@@ -17,7 +17,7 @@
  var partnerName = '<%= @chosen_user.first_name %> <%= @chosen_user.last_name %>';
  var zoom = <%= @centre[:zoom] %>;
  var radius = '<%= @centre[:radius] %>';
- var typeOfPlace = '<%= @interest_category.place %>';
+ var typeOfPlace = '<%= @interest_category.place %>'.toLowerCase().split('|');
  var keyword =  [];
  <% @interested_sub_categories.each do |sub_category|  %>
   if(keyword.indexOf('<%=sub_category.sub_category%>'.toLowerCase()) == -1) {
@@ -30,8 +30,8 @@
    var theCentre = new google.maps.LatLng(centre.lat, centre.lng);
    var placesRequest = {
      location: theCentre,
-     radius: radius*100,// TODO handle the metric conversion between meteres and kilometeres
-     types: ['restaurant'],
+     radius: radius,// TODO handle the metric conversion between meteres and kilometeres
+     types: typeOfPlace,
      keyword : keyword.join('|')
    };
    map = new google.maps.Map($('#map-canvas')[0], {

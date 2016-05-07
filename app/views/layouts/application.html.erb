@@ -32,8 +32,8 @@
                 <li>
                     <a href="#">Actions</a>
                     <ul class="menu vertical">
-                        <% if session[:current_user] %>
-                            <li><a href="/my-profile">Profile</a></li>
+                        <% if session[:current_user_id] %>
+                            <li><%= link_to 'My Interests', {:action => 'show', :id => session[:current_user_id], :controller => 'user_interests'} %></li>
                             <li><%= link_to 'Logout', {:action => 'logout', :controller => 'users'} %></li>
                         <% else %>
                             <li><%= link_to 'Sign in', {:action => 'login', :controller => 'users'} %></li>
