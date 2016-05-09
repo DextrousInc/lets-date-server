@@ -20,13 +20,13 @@ class UserInterestsController < ApplicationController
        interest_categories.map { |ic|
            @interest_map[ic[:id]] = {
              :name => ic[:category],
-             :value => []
+             :values => []
            }
          }
       end
       if !interests.blank?
        interests.map { |item|
-         @interest_map[item[:interest_category_id]][:value] << {
+         @interest_map[item[:interest_category_id]][:values] << {
            :name => item[:interest_name],
            :is_common => current_user_sub_categories.include?(item[:sub_category])
          }

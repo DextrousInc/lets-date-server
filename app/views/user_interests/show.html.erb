@@ -13,7 +13,7 @@
         </div>
         <div class="form-card-body">
           <ul class="text-left gray-light">
-            <% interests[:value].each do |interest| %>
+            <% interests[:values].each do |interest| %>
              <li>
                <% if interest[:is_common] %>
                 <span class="success badge">c</span>
@@ -24,7 +24,7 @@
           </ul>
           <% if @user_id.to_f == session[:current_user_id].to_f %>
             <%= link_to "Add", {:action => 'create', :id => @user_id, :category => key}, :class=>'button expanded success' %>
-          <% elsif !interests[:value].empty? %>
+          <% elsif !interests[:values].empty? %>
             <%= link_to "Impress", {:action => 'impress', :id => @user_id, :category => key}, :class=>'button expanded success' %>
           <% else %>
             <span class="label"> No information<span>

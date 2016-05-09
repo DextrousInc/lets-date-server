@@ -3,18 +3,30 @@ class Api::UserInterestsController < Api::BaseController
   def list
     interests = UserInterest.where(user_id: params[:id])
     interest_categories = InterestCategory.all
+    current_user_sub_categories = []
+    if params[:id].to_f != params[:userId].to_f
+      current_user_interests = UserInterest.where(user_id: params[:userId])
+      current_user_interests.each { |item|
+        unless current_user_sub_categories.include?(item.sub_category)
+          current_user_sub_categories << item.sub_category
+        end
+      }
+    end
     interest_map = {}
     if !interest_categories.blank?
      interest_categories.map { |ic|
          interest_map[ic[:id]] = {
            :name => ic[:category],
-           :value => []
+           :values => []
          }
        }
     end
     if !interests.blank?
      interests.map { |item|
-       interest_map[item[:interest_category_id]][:value] << item[:interest_name]
+       interest_map[item[:interest_category_id]][:values] << {
+         :name => item[:interest_name],
+         :is_common => current_user_sub_categories.include?(item[:sub_category])
+       }
       }
     end
     render(json: interest_map.to_json)
